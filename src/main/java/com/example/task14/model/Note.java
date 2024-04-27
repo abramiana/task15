@@ -1,8 +1,13 @@
 package com.example.task14.model;
+import jakarta.persistence.*;
 
+
+@Table
+@Entity
 public class Note {
-    private static int nextId = 1;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String content;
@@ -12,7 +17,6 @@ public class Note {
     }
 
     public Note(String title, String content) {
-        this.id = nextId++;
         this.title = title;
         this.content = content;
     }
