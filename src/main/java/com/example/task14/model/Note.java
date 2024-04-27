@@ -1,5 +1,7 @@
 package com.example.task14.model;
+import javax.persistence.Entity;
 
+@Entity
 public class Note {
     private static int nextId = 1;
 
