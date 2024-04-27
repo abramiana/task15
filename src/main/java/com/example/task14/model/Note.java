@@ -1,4 +1,4 @@
-package com.example.task14.models;
+package com.example.task14.model;
 
 public class Note {
     private static int nextId = 1;
