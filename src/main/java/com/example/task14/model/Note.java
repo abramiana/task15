@@ -1,6 +1,6 @@
 package com.example.task14.model;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 
 @Table
 @Entity
