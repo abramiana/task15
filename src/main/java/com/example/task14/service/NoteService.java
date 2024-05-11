@@ -25,12 +25,13 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
-    public void update(Note note) {
+    public Note update(Note note) {
         if (noteRepository.existsById(note.getId())) {
             noteRepository.save(note);
         } else {
             throw new IllegalArgumentException("Note with id " + note.getId() + " does not exist");
         }
+        return note;
     }
 
 
