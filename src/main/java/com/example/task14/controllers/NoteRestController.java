@@ -3,6 +3,8 @@ package com.example.task14.controllers;
 import com.example.task14.model.Note;
 import com.example.task14.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +16,41 @@ public class NoteRestController {
     @Autowired
     private NoteService noteService;
 
-    // Отримати всі записи
     @GetMapping
-    public List<Note> getAllNotes() {
-        return noteService.listAll();
+    public ResponseEntity<List<Note>> getAllNotes() {
+        List<Note> notes = noteService.listAll();
+        return new ResponseEntity<>(notes, HttpStatus.OK);
     }
 
-    // Отримати запис за id
     @GetMapping("/{id}")
-    public Note getNoteById(@PathVariable("id") long id) {
-        return noteService.getById(id);
+    public ResponseEntity<Note> getNoteById(@PathVariable("id") long id) {
+        Note note = noteService.getById(id);
+        return new ResponseEntity<>(note, HttpStatus.OK);
     }
 
-    // Додати нову запис
     @PostMapping
-    public Note addNote(@RequestBody Note note) {
-        return noteService.add(note);
+    public ResponseEntity<Note> addNote(@RequestBody Note note) {
+        Note addedNote = noteService.add(note);
+        return new ResponseEntity<>(addedNote, HttpStatus.CREATED);
     }
 
-    // Оновити запис
     @PutMapping("/{id}")
-    public Note updateNote(@PathVariable("id") long id, @RequestBody Note note) {
-        note.setId(id);
-        return noteService.update(note);
+    public ResponseEntity<Note> updateNote(@PathVariable("id") long id, @RequestBody Note note) {
+        Note existingNote = noteService.getById(id);
+        if (existingNote != null) {
+            note.setId(id);
+            Note updatedNote = noteService.update(note);
+            return new ResponseEntity<>(updatedNote, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    // Видалити запис
+
     @DeleteMapping("/{id}")
-    public void deleteNoteById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteNoteById(@PathVariable("id") long id) {
         noteService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
