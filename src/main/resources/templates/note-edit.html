@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +9,66 @@
 <body>
 <div class="container mt-5">
     <h1 class="mb-4">Edit Note</h1>
-    <form method="post" th:object="${note}" th:action="@{/note/edit}">
-        <input type="hidden" th:field="*{id}">
+    <form id="editNoteForm">
+        <input type="hidden" id="id">
         <div class="form-group">
             <label for="title">Title:</label>
-            <input type="text" class="form-control" id="title" th:field="*{title}">
+            <input type="text" class="form-control" id="title">
         </div>
         <div class="form-group">
             <label for="content">Content:</label>
-            <input type="text" class="form-control" id="content" th:field="*{content}">
+            <input type="text" class="form-control" id="content">
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-primary" onclick="saveNote()">Save</button>
     </form>
 </div>
+<script>
+    // Assuming you have a function to fetch note details by ID
+    // and populate the form fields
+    fetchNoteDetails();
+
+    function fetchNoteDetails() {
+        var noteId = getNoteIdFromUrl(); // You need to implement this function
+        fetch('/api/notes/' + noteId)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('id').value = data.id;
+                document.getElementById('title').value = data.title;
+                document.getElementById('content').value = data.content;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function saveNote() {
+        var noteId = document.getElementById('id').value;
+        var title = document.getElementById('title').value;
+        var content = document.getElementById('content').value;
+
+        fetch('/api/notes/' + noteId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content
+            })
+        }).then(response => {
+            if (response.ok) {
+                alert('Note saved successfully!');
+            } else {
+                alert('Failed to save note!');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Failed to save note!');
+        });
+    }
+
+    function getNoteIdFromUrl() {
+        // You need to implement this function to extract note ID from the URL
+        // For example, if the URL is "/notes/edit/123", this function should return "123"
+    }
+</script>
 </body>
 </html>
